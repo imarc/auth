@@ -41,7 +41,7 @@ You can create an authorization manager for your authorized user.  The object yo
 constructor must implement the `iMarc\Auth\EntityInterface` which contains two methods:
 
 - getRoles() - returns an array of all the roles the object/entity contains
-- getACLs() - returns user specific ACLs which overload roles
+- getPermissions() - returns user specific ACLs which overload roles
 
 ### Creating the Manager
 
