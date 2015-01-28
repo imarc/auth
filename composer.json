@@ -1,0 +1,29 @@
+{
+	"name": "imarc/auth",
+	"description": "RBAC and ACLs",
+	"keywords": ["acl", "auth", "rbac"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Matthew J. Sahagian",
+			"email": "matt@imarc.net",
+			"role": "Developer"
+		},
+		{
+			"name": "Brian Tam",
+			"email": "brian@imarc.net",
+			"role": "Developer"
+		},
+		{
+			"name": "Jeff Turcotte",
+			"email": "jeff@imarc.net",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	}
+}
