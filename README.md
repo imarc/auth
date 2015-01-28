@@ -11,7 +11,7 @@ entity or model level instance overrides and dynamic logic for more complex chec
 
 ```php
 $acl = new iMarc\Auth\ACL();
-```php
+```
 
 ### Adding a Role Access
 
