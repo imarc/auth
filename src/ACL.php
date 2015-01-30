@@ -5,7 +5,7 @@ namespace iMarc\Auth;
 /**
  *
  */
-class ACL
+class ACL implements ACLInterface
 {
 	/**
 	 *
