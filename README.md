@@ -73,6 +73,33 @@ Or with an object of matching class:
 $manager->can('create', $article);
 ```
 
+#### Checking Entities Implementing AuthInterface
+
+The `AuthInterface` provides a way in which entities can provide custom logic to authorize
+managed entities against themselves.  Using the previous example:
+
+```php
+$manager->can('create', $article);
+```
+
+If the `$article` parameter is an object implementing `AuthInterface` the manager will call
+the `can()` method on it passing the manager instance as the first parameter, and the permission
+which is being checked as the second.  The article can then do something such as the following:
+
+```php
+public function can(Manager $manager, $permission)
+{
+	if ($manager->has($permission, $this)) {
+		return TRUE;
+	}
+
+	return $manager->entity == $this->getOwner();
+}
+```
+
+In this example the entity checks to see if its owner is the managed entity to provide permission
+for any action which is not otherwise granted.
+
 ### Checking the Managed Etntity's ACL
 
 The entity's effective permissions may not be the same as what it's given in the ACL.  This is

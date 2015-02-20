@@ -6,6 +6,7 @@ use iMarc\Auth\ACL;
 
 return [
 	'setup' => function($data, $shared) {
+		needs($data['root'] . '/src/ACLInterface.php');
 		needs($data['root'] . '/src/ACL.php');
 
 		$shared->acl = new ACL();

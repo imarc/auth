@@ -11,6 +11,7 @@ return [
 
 		Mime::define('User')->implementing('iMarc\Auth\EntityInterface');
 
+		needs($data['root'] . '/src/ACLInterface.php');
 		needs($data['root'] . '/src/ACL.php');
 		needs($data['root'] . '/src/Manager.php');
 
