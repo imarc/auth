@@ -76,7 +76,7 @@ expanded to the permissions allowed by it.  Aliasing is simply for use with `all
 				$action
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -89,7 +89,7 @@ expanded to the permissions allowed by it.  Aliasing is simply for use with `all
 				$actions
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.array.php">array</a>
+									<a href="http://php.net/language.types.array">array</a>
 				
 			</td>
 			<td>
@@ -135,7 +135,7 @@ Allow a particular role to take actions on a given target
 				$role
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -148,7 +148,7 @@ Allow a particular role to take actions on a given target
 				$target
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -161,7 +161,7 @@ Allow a particular role to take actions on a given target
 				$actions
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td rowspan="3">
@@ -171,7 +171,7 @@ Allow a particular role to take actions on a given target
 			
 		<tr>
 			<td>
-									<a href="http://www.php.net/language.types.array.php">array</a>
+									<a href="http://php.net/language.types.array">array</a>
 				
 			</td>
 		</tr>
@@ -214,7 +214,7 @@ Get the permissions allowed by the access control list for a given role
 				$role
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -280,7 +280,7 @@ Resolve action aliases
 				$actions
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td rowspan="3">
@@ -290,7 +290,7 @@ Resolve action aliases
 			
 		<tr>
 			<td>
-									<a href="http://www.php.net/language.types.array.php">array</a>
+									<a href="http://php.net/language.types.array">array</a>
 				
 			</td>
 		</tr>

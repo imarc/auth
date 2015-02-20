@@ -125,7 +125,7 @@ Allow one way access to all private properties
 				$property
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -223,7 +223,7 @@ authorization logic.
 				$permission
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -236,7 +236,7 @@ authorization logic.
 				$entity
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td rowspan="4">
@@ -303,7 +303,7 @@ converted to its classname.
 				$permission
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -316,7 +316,7 @@ converted to its classname.
 				$entity
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td rowspan="3">
@@ -355,7 +355,7 @@ Check whether or not the managed entity has a certain role
 				$role
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -408,7 +408,7 @@ determining which action it should take based on the type.
 				$target
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -421,7 +421,7 @@ determining which action it should take based on the type.
 				$permission
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -479,7 +479,7 @@ Check a permission is in the ACL.
 				$permission
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -492,7 +492,7 @@ Check a permission is in the ACL.
 				$target
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td>
@@ -558,7 +558,7 @@ Resolve an entity to it's target name
 				$entity
 			</td>
 			<td>
-									<a href="http://www.php.net/language.types.string.php">string</a>
+									<a href="http://php.net/language.types.string">string</a>
 				
 			</td>
 			<td rowspan="3">
