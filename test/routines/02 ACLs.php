@@ -22,7 +22,7 @@ return [
 		 *
 		 */
 		'Allowing (Check Roles)' => function($data, $shared) {
-			assert('iMarc\Auth\ACL::getRoles')
+			accept('iMarc\Auth\ACL::getRoles')
 				-> using($shared->acl)
 				-> equals(['admin', 'editor']);
 		},
@@ -31,7 +31,7 @@ return [
 		 *
 		 */
 		'Allowing (Check Permissions)' => function($data, $shared) {
-			assert('iMarc\Auth\ACL::getPermissions')
+			accept('iMarc\Auth\ACL::getPermissions')
 				-> with('admin')
 				-> using($shared->acl)
 				-> equals([
@@ -53,7 +53,7 @@ return [
 			$shared->acl->alias('manage', ['create', 'read', 'update', 'delete']);
 			$shared->acl->allow('editor', 'Alert', ['manage']);
 
-			assert('iMarc\Auth\ACL::getPermissions')
+			accept('iMarc\Auth\ACL::getPermissions')
 				-> with('editor')
 				-> using($shared->acl)
 				-> equals([
@@ -70,7 +70,7 @@ return [
 			$shared->acl->alias('admin', ['manage', 'permit']);
 			$shared->acl->allow('editor', 'Article', ['admin']);
 
-			assert('iMarc\Auth\ACL::getPermissions')
+			accept('iMarc\Auth\ACL::getPermissions')
 				-> with('editor')
 				-> using($shared->acl)
 				-> equals([

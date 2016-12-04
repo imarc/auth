@@ -39,7 +39,7 @@ return [
 		 *
 		 */
 		'Can' => function($data, $shared) {
-			assert('iMarc\Auth\Manager::can')
+			accept('iMarc\Auth\Manager::can')
 				-> using($shared->manager)
 				-> with('create', 'user')
 				-> equals(FALSE)
@@ -55,7 +55,7 @@ return [
 					return TRUE;
 			});
 
-			assert('iMarc\Auth\Manager::can')
+			accept('iMarc\Auth\Manager::can')
 				-> using($shared->manager)
 				-> with('create', 'user')
 				-> equals(TRUE)
@@ -67,7 +67,7 @@ return [
 		 *
 		 */
 		'Has' => function($data, $shared) {
-			assert('iMarc\Auth\Manager::has')
+			accept('iMarc\Auth\Manager::has')
 				-> using($shared->manager)
 				-> with('create', 'user')
 				-> equals(FALSE)
@@ -81,7 +81,7 @@ return [
 		 *
 		 */
 		'Is' => function($data, $shared) {
-			assert('iMarc\Auth\Manager::is')
+			accept('iMarc\Auth\Manager::is')
 				-> using($shared->manager)
 				-> with('Admin')
 				-> equals(FALSE)
