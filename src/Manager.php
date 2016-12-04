@@ -57,10 +57,11 @@ class Manager
 	 * @param EntityInterface $entity An object entity for which we're authorizing actions
 	 * @return void
 	 */
-	public function __construct(EntityInterface $entity)
+	public function __construct(EntityInterface $entity = NULL)
 	{
-		$this->entity = $entity;
-		$this->roles  = array_map('strtolower', $this->entity->getRoles());
+		if ($entity) {
+			$this->setEntity($entity);
+		}
 	}
 
 
@@ -87,14 +88,9 @@ class Manager
 	public function add(ACLInterface $acl)
 	{
 		$this->acls[] = $acl;
-		$acl_roles    = $acl->getRoles();
-		$import_roles = array_intersect($acl_roles, $this->roles);
 
-		foreach ($import_roles as $import_role) {
-			$this->permissions = array_merge_recursive(
-				$this->permissions,
-				$acl->getPermissions($import_role)
-			);
+		if ($this->entity) {
+			$this->importAcl($acl);
 		}
 
 		$this->refresh();
@@ -195,6 +191,25 @@ class Manager
 
 
 	/**
+	 *
+	 */
+	public function setEntity(EntityInterface $entity)
+	{
+		$this->permissions = array();
+		$this->entity      = $entity;
+		$this->roles       = array_map('strtolower', $this->entity->getRoles());
+
+		foreach ($this->acls as $acl) {
+			$this->importAcl($acl);
+		}
+
+		$this->refresh();
+
+		return $this;
+	}
+
+
+	/**
 	 * Check a permission is in the ACL.
 	 *
 	 * @access private
@@ -209,6 +224,23 @@ class Manager
 		}
 
 		return in_array($permission, $this->permissions[$target]);
+	}
+
+
+	/**
+	 *
+	 */
+	private function importAcl($acl)
+	{
+		$acl_roles    = $acl->getRoles();
+		$import_roles = array_intersect($acl_roles, $this->roles);
+
+		foreach ($import_roles as $import_role) {
+			$this->permissions = array_merge_recursive(
+				$this->permissions,
+				$acl->getPermissions($import_role)
+			);
+		}
 	}
 
 
