@@ -91,9 +91,9 @@ class Manager
 
 		if ($this->entity) {
 			$this->importAcl($acl);
+			$this->refresh();
 		}
 
-		$this->refresh();
 
 		return $this;
 	}
