@@ -21,7 +21,7 @@
 		}
 	],
 	"require-dev": {
-		"dotink/lab": "^1.1.0",
+		"dotink/lab": "^1.2.0",
 		"dotink/parody": "^1.0.0"
 	},
 	"require": {
