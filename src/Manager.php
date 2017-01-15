@@ -128,6 +128,15 @@ class Manager
 
 
 	/**
+ 	 *
+	 */
+	public function getEntity()
+	{
+		return $this->entity;
+	}
+
+
+	/**
 	 * Check whether the managed entity has a permission on another another entity per the ACLs
 	 *
 	 * Unlike `can()` this method is designed to check the ACLs alone.  It invokes no custom
