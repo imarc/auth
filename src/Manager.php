@@ -51,6 +51,15 @@ class Manager
 
 
 	/**
+	 * A list of registered auth services
+	 *
+	 * @access private
+	 * @var array
+	 */
+	private $services = array();
+
+
+	/**
 	 * Create a new manager
 	 *
 	 * @access public
@@ -100,30 +109,34 @@ class Manager
 
 
 	/**
-	 * Check whether or not the managed entity has a permission on another entity
+	 * Check whether or not the managed entity has a permission on another context
 	 *
-	 * The provided `$entity` can be a string (usually a class name) or object, which will be
+	 * The provided `$context` can be a string (usually a class name) or object, which will be
 	 * converted to its classname, or an object implementing `AuthInterface` for custom
 	 * authorization logic.
 	 *
 	 * @access public
 	 * @param string $permission The permission to check for
-	 * @param string|Object|AuthInterface $entity An entity to check permissions on
-	 * @return boolean TRUE if the managed entity has the permission on the provided entity
+	 * @param string|Object|AuthInterface $context A context to check permissions on
+	 * @return boolean TRUE if the managed entity has the permission on the provided context
 	 */
-	public function can($permission, $entity)
+	public function can($permission, $context)
 	{
-		$target = $this->resolve($entity);
+		$target = $this->resolve($context);
 
 		if (isset($this->overrides[$target][$permission])) {
-			return (bool) $this->overrides[$target][$permission]($this, $entity);
-		}
+			return (bool) $this->overrides[$target][$permission]($this, $context);
 
-		if ($entity instanceof AuthInterface) {
-			return $entity->can($this, $permission);
-		}
+		} elseif (isset($this->services[$target])) {
+			return (bool) $this->services[$target]($this, $context, $permission);
 
-		return $this->check($permission, $target);
+		} elseif ($context instanceof AuthInterface) {
+			return $context->can($this, $permission);
+
+		} else {
+			return $this->check($permission, $target);
+
+		}
 	}
 
 
@@ -137,21 +150,21 @@ class Manager
 
 
 	/**
-	 * Check whether the managed entity has a permission on another another entity per the ACLs
+	 * Check whether the managed entity has a permission on another another context per the ACLs
 	 *
 	 * Unlike `can()` this method is designed to check the ACLs alone.  It invokes no custom
 	 * logic or overrides and is purely based on ACLs and permissions.
 	 *
-	 * The provided `$entity` can be a string (usually a class name) or object, which will be
+	 * The provided `$context` can be a string (usually a class name) or object, which will be
 	 * converted to its classname.
 	 *
 	 * @param string $permission The permission to check for
-	 * @param string|Object $entity An entity to check permissions on	 *
+	 * @param string|Object $context A context to check permissions on	 *
 	 * @access public
 	 */
-	public function has($permission, $entity)
+	public function has($permission, $context)
 	{
-		$target = $this->resolve($entity);
+		$target = $this->resolve($context);
 
 		return $this->check($permission, $target);
 	}
@@ -173,8 +186,8 @@ class Manager
 	/**
 	 * Override permission checks on a particular target with custom logic
 	 *
-	 * The callback will receive the calling auth manager and the entity to check against such
-	 * as $callback(Manager $manager, $entity), note, the entity is passed unresolved so it could
+	 * The callback will receive the calling auth manager and the context to check against such
+	 * as $callback(Manager $manager, $context), note, the context is passed unresolved so it could
 	 * be a string, or object/AuthInterface implementation, the callback is responsible for
 	 * determining which action it should take based on the type.
 	 *
@@ -194,6 +207,23 @@ class Manager
 		}
 
 		$this->overrides[$target][$permission] = $callback;
+
+		return $this;
+	}
+
+
+	/**
+	 *
+	 */
+	public function register($target, Callable $callback)
+	{
+		$target = strtolower($target);
+
+		if (!isset($this->services[$target])) {
+			$this->services[$target] = array();
+		}
+
+		$this->overrides[$target] = $callback;
 
 		return $this;
 	}
@@ -272,18 +302,18 @@ class Manager
 
 
 	/**
-	 * Resolve an entity to it's target name
+	 * Resolve a context to its target name
 	 *
 	 * @access private
-	 * @param string|Object $entity The entity to resolve
-	 * @return string The lowercase target name representing the entity
+	 * @param string|Object $context The context to resolve
+	 * @return string The lowercase target name representing the context
 	 */
-	private function resolve($entity)
+	private function resolve($context)
 	{
-		if (is_object($entity)) {
-			$target = get_class($entity);
+		if (is_object($context)) {
+			$target = get_class($context);
 		} else {
-			$target = (string) $entity;
+			$target = (string) $context;
 		}
 
 		return strtolower($target);
