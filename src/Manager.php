@@ -122,21 +122,34 @@ class Manager
 	 */
 	public function can($permission, $context)
 	{
+		$can    = NULL;
 		$target = $this->resolve($context);
 
 		if (isset($this->overrides[$target][$permission])) {
-			return (bool) $this->overrides[$target][$permission]($this, $context);
-
-		} elseif (isset($this->services[$target])) {
-			return (bool) $this->services[$target]($this, $context, $permission);
-
-		} elseif ($context instanceof AuthInterface) {
-			return $context->can($this, $permission);
-
-		} else {
-			return $this->check($permission, $target);
-
+			$can = $this->overrides[$target][$permission]($this, $context);
 		}
+
+		if ($can === NULL && isset($this->overrides['*'][$permission])) {
+			$can = $this->overrides['*'][$permission]($this, $context);
+		}
+
+		if ($can === NULL && isset($this->services[$target])) {
+			$can = $this->services[$target]($this, $context, $permission);
+		}
+
+		if ($can === NULL && isset($this->services['*'])) {
+			$can = $this->services['*']($this, $context, $permission);
+		}
+
+		if ($can === NULL && $context instanceof AuthInterface) {
+			$can = $context->can($this, $permission);
+		}
+
+		if ($can === NULL) {
+			$can = $this->check($permission, $target);
+		}
+
+		return $can;
 	}
 
 
@@ -223,9 +236,28 @@ class Manager
 			$this->services[$target] = array();
 		}
 
-		$this->overrides[$target] = $callback;
+		$this->services[$target] = $callback;
 
 		return $this;
+	}
+
+
+	/**
+	 * Resolve a context to its target name
+	 *
+	 * @access private
+	 * @param string|Object $context The context to resolve
+	 * @return string The lowercase target name representing the context
+	 */
+	public function resolve($context)
+	{
+		if (is_object($context)) {
+			$target = get_class($context);
+		} else {
+			$target = (string) $context;
+		}
+
+		return strtolower($target);
 	}
 
 
@@ -298,24 +330,5 @@ class Manager
 		foreach ($this->permissions as $target => $permissions) {
 			$this->permissions[$target] = array_unique($permissions);
 		}
-	}
-
-
-	/**
-	 * Resolve a context to its target name
-	 *
-	 * @access private
-	 * @param string|Object $context The context to resolve
-	 * @return string The lowercase target name representing the context
-	 */
-	private function resolve($context)
-	{
-		if (is_object($context)) {
-			$target = get_class($context);
-		} else {
-			$target = (string) $context;
-		}
-
-		return strtolower($target);
 	}
 }
