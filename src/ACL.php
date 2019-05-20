@@ -124,13 +124,13 @@ class ACL implements ACLInterface
 	 */
 	private function resolve($actions)
 	{
-		settype($action, 'array');
+		settype($actions, 'array');
 
 		foreach ($actions as $i => $action) {
 			if (isset($this->aliases[$action])) {
 				unset($actions[$i]);
 
-				$actions = array_merge(	$actions, $this->resolve($this->aliases[$action]));
+				$actions = array_merge($actions, $this->resolve($this->aliases[$action]));
 			}
 		}
 

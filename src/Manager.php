@@ -51,6 +51,15 @@ class Manager
 
 
 	/**
+	 * Roles of the currently authorized entity
+	 *
+	 * @access private
+	 * @var array
+	 */
+	private $roles = array();
+
+
+	/**
 	 * A list of registered auth services
 	 *
 	 * @access private
@@ -154,7 +163,9 @@ class Manager
 
 
 	/**
- 	 *
+	 * Get the current authorized entity
+	 *
+	 * @return EntityInterface The current authorized entity
 	 */
 	public function getEntity()
 	{
