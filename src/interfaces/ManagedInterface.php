@@ -1,12 +1,12 @@
 <?php
 
-namespace iMarc\Auth;
+namespace Auth;
 
 /**
  * An interface for objects which need auth management
  *
- * @copyright Copyright (c) 2015, iMarc LLC
- * @author Matthew J. Sahagian [mjs] <msahagian@dotink.org>
+ * @copyright Copyright (c) 2019, Imarc LLC
+ * @author Matthew J. Sahagian [mjs] <matthew.sahagian@gmail.com>
  *
  * @license MIT
  *
@@ -19,7 +19,7 @@ interface ManagedInterface
 	 *
 	 * @access public
 	 * @param Manager $manager The auth manager containing the manged entity and permissions
-	 * @return Object The object instance for method chaining
+	 * @return object The object instance for method chaining
 	 */
-	public function setAuthManager(Manager $manager);
+	public function setAuthManager(Manager $manager): object;
 }

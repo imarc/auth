@@ -1,12 +1,12 @@
 <?php
 
-namespace iMarc\Auth;
+namespace Auth;
 
 /**
  * A static ACL implementation which allows for aliasing and simple access registration
  *
- * @copyright Copyright (c) 2015, iMarc LLC
- * @author Matthew J. Sahagian [mjs] <msahagian@dotink.org>
+ * @copyright Copyright (c) 2019, Imarc LLC
+ * @author Matthew J. Sahagian [mjs] <matthew.sahagian@gmail.com>
  *
  * @license MIT
  *
@@ -43,7 +43,7 @@ class ACL implements ACLInterface
 	 * @param array $actions The actions which the action alias should resolve to
 	 * @return ACL The called instance for method chaining
 	 */
-	public function alias($action, Array $actions)
+	public function alias(string $action, array $actions): ACL
 	{
 		$this->aliases[$action] = $actions;
 
@@ -57,10 +57,10 @@ class ACL implements ACLInterface
 	 * @access public
 	 * @param string $role The role to allow
 	 * @param string $target The target to allow permissions on (usually a classname)
-	 * @param string|array $actions The permission(s) to allow
+	 * @param array $actions The permission(s) to allow
 	 * @return ACL The called instance for method chaining
 	 */
-	public function allow($role, $target, $actions)
+	public function allow(string $role, string $target, array $actions): ACL
 	{
 		$role    = strtolower($role);
 		$target  = strtolower($target);
@@ -91,7 +91,7 @@ class ACL implements ACLInterface
 	 * @param string $role The role to get permissions for
 	 * @return array The allowed permissions
 	 */
-	public function getPermissions($role)
+	public function getPermissions(string $role): array
 	{
 		$role = strtolower($role);
 
@@ -109,7 +109,7 @@ class ACL implements ACLInterface
 	 * @access public
 	 * @return array The supported roles
 	 */
-	public function getRoles()
+	public function getRoles(): array
 	{
 		return array_keys($this->data);
 	}
@@ -119,21 +119,21 @@ class ACL implements ACLInterface
 	 * Resolve action aliases
 	 *
 	 * @access private
-	 * @param string|array $actions The action(s) to resolve
+	 * @param array $actions The action(s) to resolve
 	 * @return array The resolved actions
 	 */
-	private function resolve($actions)
+	private function resolve(array $actions): array
 	{
-		settype($actions, 'array');
+		$resolved = array();
 
 		foreach ($actions as $i => $action) {
-			if (isset($this->aliases[$action])) {
-				unset($actions[$i]);
+			$resolved[] = $action;
 
-				$actions = array_merge($actions, $this->resolve($this->aliases[$action]));
+			if (isset($this->aliases[$action])) {
+				$resolved = array_merge($resolved, $this->resolve($this->aliases[$action]));
 			}
 		}
 
-		return array_map('strtolower', $actions);
+		return array_map('strtolower', $resolved);
 	}
 }

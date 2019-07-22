@@ -1,12 +1,12 @@
 <?php
 
-namespace iMarc\Auth;
+namespace Auth;
 
 /**
  * Manages access control lists and entity authorization against them
  *
- * @copyright Copyright (c) 2015, iMarc LLC
- * @author Matthew J. Sahagian [mjs] <msahagian@dotink.org>
+ * @copyright Copyright (c) 2019, Imarc LLC
+ * @author Matthew J. Sahagian [mjs] <matthew.sahagian@gmail.com>
  *
  * @license MIT
  *
@@ -27,18 +27,10 @@ class Manager
 	 * The entity which we are authorizing
 	 *
 	 * @access private
-	 * @var EntityInterface
+	 * @var EntityInterface|null
 	 */
 	private $entity = NULL;
 
-
-	/**
-	 * Custom logic for specific authorization checks
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private $overrides = array();
 
 
 	/**
@@ -68,33 +60,6 @@ class Manager
 	private $services = array();
 
 
-	/**
-	 * Create a new manager
-	 *
-	 * @access public
-	 * @param EntityInterface $entity An object entity for which we're authorizing actions
-	 * @return void
-	 */
-	public function __construct(EntityInterface $entity = NULL)
-	{
-		if ($entity) {
-			$this->setEntity($entity);
-		}
-	}
-
-
-	/**
-	 * Allow one way access to all private properties
-	 *
-	 * @access public
-	 * @param string $property The property to retrieve
-	 * @return mixed The property
-	 */
-	public function __get($property)
-	{
-		return $this->$property;
-	}
-
 
 	/**
 	 * Add an access control list to the manager
@@ -103,7 +68,7 @@ class Manager
 	 * @param ACLInterface $acl The access control list to add
 	 * @return Manager The called instance for method chaining
 	 */
-	public function add(ACLInterface $acl)
+	public function add(ACLInterface $acl): Manager
 	{
 		$this->acls[] = $acl;
 
@@ -126,21 +91,13 @@ class Manager
 	 *
 	 * @access public
 	 * @param string $permission The permission to check for
-	 * @param string|Object|AuthInterface $context A context to check permissions on
-	 * @return boolean TRUE if the managed entity has the permission on the provided context
+	 * @param string|object|AuthInterface $context A context to check permissions on
+	 * @return bool TRUE if the managed entity has the permission, FALSE othrewise
 	 */
-	public function can($permission, $context)
+	public function can($permission, $context): bool
 	{
 		$can    = NULL;
 		$target = $this->resolve($context);
-
-		if (isset($this->overrides[$target][$permission])) {
-			$can = $this->overrides[$target][$permission]($this, $context);
-		}
-
-		if ($can === NULL && isset($this->overrides['*'][$permission])) {
-			$can = $this->overrides['*'][$permission]($this, $context);
-		}
 
 		if ($can === NULL && isset($this->services[$target])) {
 			$can = $this->services[$target]($this, $context, $permission);
@@ -165,33 +122,13 @@ class Manager
 	/**
 	 * Get the current authorized entity
 	 *
-	 * @return EntityInterface The current authorized entity
+	 * @return EntityInterface|null The current authorized entity, NULL if none has been set
 	 */
-	public function getEntity()
+	public function getEntity(): ?EntityInterface
 	{
 		return $this->entity;
 	}
 
-
-	/**
-	 * Check whether the managed entity has a permission on another another context per the ACLs
-	 *
-	 * Unlike `can()` this method is designed to check the ACLs alone.  It invokes no custom
-	 * logic or overrides and is purely based on ACLs and permissions.
-	 *
-	 * The provided `$context` can be a string (usually a class name) or object, which will be
-	 * converted to its classname.
-	 *
-	 * @param string $permission The permission to check for
-	 * @param string|Object $context A context to check permissions on	 *
-	 * @access public
-	 */
-	public function has($permission, $context)
-	{
-		$target = $this->resolve($context);
-
-		return $this->check($permission, $target);
-	}
 
 
 	/**
@@ -199,47 +136,23 @@ class Manager
 	 *
 	 * @access public
 	 * @param string $role The role to check the managed entity for
-	 * @return boolean TRUE if the managed entity has that role, FALSE otherwise
+	 * @return bool TRUE if the managed entity has that role, FALSE otherwise
 	 */
-	public function is($role)
+	public function is($role): bool
 	{
 		return in_array(strtolower($role), $this->roles);
 	}
 
 
 	/**
-	 * Override permission checks on a particular target with custom logic
-	 *
-	 * The callback will receive the calling auth manager and the context to check against such
-	 * as $callback(Manager $manager, $context), note, the context is passed unresolved so it could
-	 * be a string, or object/AuthInterface implementation, the callback is responsible for
-	 * determining which action it should take based on the type.
+	 * Register a callable (service) for auth checking on a given target
 	 *
 	 * @access public
-	 * @param string $target The target to overide on
-	 * @param string $permission The permission to provide logic for
-	 * @param callable $callback The callback which handles the logic
+	 * @param string $target The target on which the service operates
+	 * @param callable $service The callable service which checks permissions
 	 * @return Manager The called instance for method chaining
 	 */
-	public function override($target, $permission, Callable $callback)
-	{
-		$target     = strtolower($target);
-		$permission = strtolower($permission);
-
-		if (!isset($this->overrides[$target])) {
-			$this->overrides[$target] = array();
-		}
-
-		$this->overrides[$target][$permission] = $callback;
-
-		return $this;
-	}
-
-
-	/**
-	 *
-	 */
-	public function register($target, Callable $callback)
+	public function register(string $target, callable $service): Manager
 	{
 		$target = strtolower($target);
 
@@ -247,7 +160,7 @@ class Manager
 			$this->services[$target] = array();
 		}
 
-		$this->services[$target] = $callback;
+		$this->services[$target] = $service;
 
 		return $this;
 	}
@@ -257,10 +170,10 @@ class Manager
 	 * Resolve a context to its target name
 	 *
 	 * @access private
-	 * @param string|Object $context The context to resolve
+	 * @param string|object $context The context to resolve
 	 * @return string The lowercase target name representing the context
 	 */
-	public function resolve($context)
+	public function resolve($context): string
 	{
 		if (is_object($context)) {
 			$target = get_class($context);
@@ -273,9 +186,13 @@ class Manager
 
 
 	/**
+	 * Set the authorized entity
 	 *
+	 * @access public
+	 * @param EntityInterface $entity The entity which is authorized
+	 * @return Manager The called instance for method chaining
 	 */
-	public function setEntity(EntityInterface $entity)
+	public function setEntity(EntityInterface $entity): Manager
 	{
 		$this->permissions = array();
 		$this->entity      = $entity;
@@ -297,9 +214,9 @@ class Manager
 	 * @access private
 	 * @param string $permission The permission to check
 	 * @param string $target The resolved target to check on
-	 * @return boolean TRUE if the permissions is granted in the ACL, FALSE otherwise
+	 * @return bool TRUE if the permissions is granted in the ACL, FALSE otherwise
 	 */
-	private function check($permission, $target)
+	private function check($permission, $target): bool
 	{
 		if (!isset($this->permissions[$target])) {
 			return FALSE;
@@ -311,8 +228,10 @@ class Manager
 
 	/**
 	 *
+	 * @access private
+	 * @return Manager The called instance for method chaining
 	 */
-	private function importAcl($acl)
+	private function importAcl(ACLInterface $acl): Manager
 	{
 		$acl_roles    = $acl->getRoles();
 		$import_roles = array_intersect($acl_roles, $this->roles);
@@ -323,6 +242,8 @@ class Manager
 				$acl->getPermissions($import_role)
 			);
 		}
+
+		return $this;
 	}
 
 
@@ -330,16 +251,20 @@ class Manager
 	 * Compile all permissions using the managed entities permissions as static overrides
 	 *
 	 * @access private
-	 * @return void
+	 * @return Manager The called instance for method chaining
 	 */
-	private function refresh()
+	private function refresh(): Manager
 	{
-		foreach ($this->entity->getPermissions() as $target => $permissions) {
-			$this->permissions[strtolower($target)] = array_map('strtolower', $permissions);
+		if ($this->entity) {
+			foreach ($this->entity->getPermissions() as $target => $permissions) {
+				$this->permissions[strtolower($target)] = array_map('strtolower', $permissions);
+			}
+
+			foreach ($this->permissions as $target => $permissions) {
+				$this->permissions[$target] = array_unique($permissions);
+			}
 		}
 
-		foreach ($this->permissions as $target => $permissions) {
-			$this->permissions[$target] = array_unique($permissions);
-		}
+		return $this;
 	}
 }

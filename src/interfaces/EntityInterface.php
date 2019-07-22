@@ -1,12 +1,12 @@
 <?php
 
-namespace iMarc\Auth;
+namespace Auth;
 
 /**
  * Make objects able to authorize access to themselves
  *
- * @copyright Copyright (c) 2015, iMarc LLC
- * @author Matthew J. Sahagian [mjs] <msahagian@dotink.org>
+ * @copyright Copyright (c) 2019, Imarc LLC
+ * @author Matthew J. Sahagian [mjs] <matthew.sahagian@gmail.com>
  *
  * @license MIT
  *
@@ -25,7 +25,7 @@ interface EntityInterface
 	 * @access public
 	 * @return array The specific permissions for the entity, $target => [$permission, ...]
 	 */
-	public function getPermissions();
+	public function getPermissions(): array;
 
 
 	/**
@@ -34,5 +34,5 @@ interface EntityInterface
 	 * @access public
 	 * @return array The roles which the entity has
 	 */
-	public function getRoles();
+	public function getRoles(): array;
 }

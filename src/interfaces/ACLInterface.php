@@ -1,12 +1,12 @@
 <?php
 
-namespace iMarc\Auth;
+namespace Auth;
 
 /**
  * The interface for providing access control list information
  *
- * @copyright Copyright (c) 2015, iMarc LLC
- * @author Matthew J. Sahagian [mjs] <msahagian@dotink.org>
+ * @copyright Copyright (c) 2019, Imarc LLC
+ * @author Matthew J. Sahagian [mjs] <matthew.sahagian@gmail.com>
  *
  * @license MIT
  *
@@ -21,7 +21,7 @@ interface ACLInterface
 	 * @param string $role The role to get permissions for
 	 * @return array The allowed permissions
 	 */
-	public function getPermissions($role);
+	public function getPermissions(string $role): array;
 
 
 	/**
@@ -30,5 +30,5 @@ interface ACLInterface
 	 * @access public
 	 * @return array The supported roles
 	 */
-	public function getRoles();
+	public function getRoles(): array;
 }

@@ -10,8 +10,8 @@
 			"role": "Developer"
 		},
 		{
-			"name": "Brian Tam",
-			"email": "brian@imarc.net",
+			"name": "Avery Tam",
+			"email": "avery@imarc.net",
 			"role": "Developer"
 		},
 		{
@@ -20,14 +20,14 @@
 			"role": "Developer"
 		}
 	],
-	"require-dev": {
-		"dotink/lab": "^1.2.0",
-		"dotink/parody": "^1.0.0"
-	},
 	"require": {
-		"php": ">=5.4.0"
+		"php": ">=7.2"
 	},
 	"autoload": {
 		"classmap": ["src/"]
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^8.2",
+		"vimeo/psalm": "^3.4"
 	}
 }
