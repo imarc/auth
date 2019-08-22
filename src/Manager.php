@@ -100,11 +100,11 @@ class Manager
 		$target = $this->resolve($context);
 
 		if ($can === NULL && isset($this->services[$target])) {
-			$can = $this->services[$target]($this, $context, $permission);
+			$can = $this->services[$target]($this, $permission, $context);
 		}
 
 		if ($can === NULL && isset($this->services['*'])) {
-			$can = $this->services['*']($this, $context, $permission);
+			$can = $this->services['*']($this, $permission, $context);
 		}
 
 		if ($can === NULL && $context instanceof AuthInterface) {
