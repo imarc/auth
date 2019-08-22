@@ -176,9 +176,15 @@ class Manager
 	public function resolve($context): string
 	{
 		if (is_object($context)) {
-			$target = get_class($context);
+			if ($context instanceof ContextInteface) {
+				$target = $context->getAuthContext();
+			} else {
+				$target = get_class($context);
+			}
+
 		} else {
 			$target = (string) $context;
+
 		}
 
 		return strtolower($target);
