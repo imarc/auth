@@ -43,7 +43,7 @@ class GuardMiddleware implements Middleware, ManagedInterface
 	{
 		$result = $this->guard->check(
 			$request->getUri()->getPath(),
-			$this->auth
+			$this->auth && $this->auth->getEntity()
 				? $this->auth->getEntity()->getRoles()
 				: array()
 		);
