@@ -20,7 +20,7 @@ interface AuthInterface
 	 * @access public
 	 * @param Manager $manager The auth manager containing the manged entity and permissions
 	 * @param string $permission The permission we're checking
-	 * @return boolean TRUE if permission is granted, FALSE otherwise
+	 * @return boolean|null TRUE: has permission, FALSE: does not have permission, NULL: check ACL
 	 */
-	public function can(Manager $manager, string $permission): bool;
+	public function can(Manager $manager, string $permission): ?bool;
 }
