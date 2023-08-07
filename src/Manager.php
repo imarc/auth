@@ -18,7 +18,7 @@ class Manager
 	 * A list of added ACLs
 	 *
 	 * @access private
-	 * @var array
+	 * @var array<ACLInterface>
 	 */
 	private $acls = array();
 
@@ -32,12 +32,11 @@ class Manager
 	private $entity = NULL;
 
 
-
 	/**
 	 * The composite permissions for the entity based on all provided ACLs, custom permissions, etc
 	 *
 	 * @access private
-	 * @var array
+	 * @var array<string,array<string>>
 	 */
 	private $permissions = array();
 
@@ -46,7 +45,7 @@ class Manager
 	 * Roles of the currently authorized entity
 	 *
 	 * @access private
-	 * @var array
+	 * @var array<string>
 	 */
 	private $roles = array();
 
@@ -55,10 +54,9 @@ class Manager
 	 * A list of registered auth services
 	 *
 	 * @access private
-	 * @var array
+	 * @var array<string,callable>
 	 */
 	private $services = array();
-
 
 
 	/**
@@ -73,7 +71,7 @@ class Manager
 		$this->acls[] = $acl;
 
 		if ($this->entity) {
-			$this->importAcl($acl);
+			$this->import($acl);
 			$this->refresh();
 		}
 
@@ -130,7 +128,6 @@ class Manager
 	}
 
 
-
 	/**
 	 * Check whether or not the managed entity has a certain role
 	 *
@@ -145,6 +142,36 @@ class Manager
 
 
 	/**
+	 * See if the authorized entity has all of one or more roles
+	 *
+	 * @access public
+	 * @param array<string> $roles The roles to check against
+	 * @return bool TRUE if the managed entity has all the roles, FALSE otherwise
+	 */
+	public function isAll(array $roles): bool
+	{
+		$roles = array_map('strtolower', $roles);
+
+		return count($roles) == count(array_intersect($roles, $this->roles));
+	}
+
+
+	/**
+	 * See if the authorized entity has any of one or more roles
+	 *
+	 * @access public
+	 * @param array<string> $roles The roles to check against
+	 * @return bool TRUE if the managed entity has any of the roles, FALSE otherwise
+	 */
+	public function isAny(array $roles): bool
+	{
+		$roles = array_map('strtolower', $roles);
+
+		return count(array_intersect($roles, $this->roles)) >= 1;
+	}
+
+
+	/**
 	 * Register a callable (service) for auth checking on a given target
 	 *
 	 * @access public
@@ -154,13 +181,7 @@ class Manager
 	 */
 	public function register(string $target, callable $service): Manager
 	{
-		$target = strtolower($target);
-
-		if (!isset($this->services[$target])) {
-			$this->services[$target] = array();
-		}
-
-		$this->services[$target] = $service;
+		$this->services[strtolower($target)] = $service;
 
 		return $this;
 	}
@@ -205,7 +226,7 @@ class Manager
 		$this->roles       = array_map('strtolower', $this->entity->getRoles());
 
 		foreach ($this->acls as $acl) {
-			$this->importAcl($acl);
+			$this->import($acl);
 		}
 
 		$this->refresh();
@@ -233,11 +254,12 @@ class Manager
 
 
 	/**
+	 * Import an ACL into the permissions
 	 *
 	 * @access private
 	 * @return Manager The called instance for method chaining
 	 */
-	private function importAcl(ACLInterface $acl): Manager
+	private function import(ACLInterface $acl): Manager
 	{
 		$acl_roles    = $acl->getRoles();
 		$import_roles = array_intersect($acl_roles, $this->roles);

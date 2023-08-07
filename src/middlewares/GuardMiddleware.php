@@ -21,6 +21,12 @@ class GuardMiddleware implements Middleware, ManagedInterface
 
 
 	/**
+	 * @var ResponseFactory|null
+	 */
+	protected $factory = NULL;
+
+
+	/**
 	 * @var Guard|null
 	 */
 	protected $guard = NULL;

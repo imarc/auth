@@ -99,3 +99,18 @@ public function can(Manager $manager, $permission)
 
 In this example the entity checks to see if its owner is the managed entity to provide permission
 for any action which is not otherwise granted.
+
+
+#### Code Check and Testing
+
+Run Analysis:
+
+```
+php vendor/bin/phpstan -l7 analyse src/
+```
+
+Run Tests:
+
+```
+php vendor/bin/phpunit --bootstrap vendor/autoload.php test/cases
+```

@@ -23,7 +23,7 @@ interface EntityInterface
 	 * replace others not append to them.
 	 *
 	 * @access public
-	 * @return array The specific permissions for the entity, $target => [$permission, ...]
+	 * @return array<string,array<string>> The specific permissions for the entity, keyed by target
 	 */
 	public function getPermissions(): array;
 
@@ -32,7 +32,7 @@ interface EntityInterface
 	 * Get the roles which the entity has
 	 *
 	 * @access public
-	 * @return array The roles which the entity has
+	 * @return array<string> The roles which the entity has
 	 */
 	public function getRoles(): array;
 }

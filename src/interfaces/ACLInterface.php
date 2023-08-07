@@ -19,7 +19,7 @@ interface ACLInterface
 	 *
 	 * @access public
 	 * @param string $role The role to get permissions for
-	 * @return array The allowed permissions
+	 * @return array<string, array<string>> The allowed permissions
 	 */
 	public function getPermissions(string $role): array;
 
@@ -28,7 +28,7 @@ interface ACLInterface
 	 * Get the roles supported by the access control list
 	 *
 	 * @access public
-	 * @return array The supported roles
+	 * @return array<string> The supported roles
 	 */
 	public function getRoles(): array;
 }
