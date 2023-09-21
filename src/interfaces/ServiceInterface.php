@@ -12,18 +12,18 @@ namespace Auth;
  *
  * @package Auth
  */
-interface AuthInterface
+interface ServiceInterface
 {
 	/**
-	 * Custom functionality to check permission on the implementing instance.
+	 * Entry point for the service.
 	 *
-	 * If the auth instance cannot determine authorization (returns NULL) then subsequent methods will
+	 * If the service cannot determine authorization (returns NULL) then subsequent methods will
 	 * be tried by the manager.
 	 *
-	 * @access public
-	 * @param Manager $manager The auth manager containing the manged entity and permissions
+	 * @param Manager $auth The auth manager
 	 * @param string $permission The permission we're checking
+	 * @param mixed $context The context to check against, usually an object or string
 	 * @return boolean|null TRUE: has permission, FALSE: does not have permission, NULL: indeterminate
 	 */
-	public function can(Manager $manager, string $permission): ?bool;
+	public function __invoke(Manager $manager, string $permission): ?bool;
 }
