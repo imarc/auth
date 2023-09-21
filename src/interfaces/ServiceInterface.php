@@ -25,5 +25,5 @@ interface ServiceInterface
 	 * @param mixed $context The context to check against, usually an object or string
 	 * @return boolean|null TRUE: has permission, FALSE: does not have permission, NULL: indeterminate
 	 */
-	public function __invoke(Manager $manager, string $permission): ?bool;
+	public function __invoke(Manager $auth, string $permission, $context): ?bool;
 }
