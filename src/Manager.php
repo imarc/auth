@@ -94,6 +94,10 @@ class Manager
 	 */
 	public function can($permission, $context): bool
 	{
+		if (empty($this->permissions)) {
+			return TRUE;
+		}
+
 		$can    = NULL;
 		$target = $this->resolve($context);
 
@@ -137,6 +141,10 @@ class Manager
 	 */
 	public function is($role): bool
 	{
+		if (empty($this->roles)) {
+			return TRUE;
+		}
+
 		return in_array(strtolower($role), $this->roles);
 	}
 
@@ -150,6 +158,10 @@ class Manager
 	 */
 	public function isAll(array $roles): bool
 	{
+		if (empty($this->roles)) {
+			return TRUE;
+		}
+
 		$roles = array_map('strtolower', $roles);
 
 		return count($roles) == count(array_intersect($roles, $this->roles));
@@ -165,6 +177,10 @@ class Manager
 	 */
 	public function isAny(array $roles): bool
 	{
+		if (empty($this->roles)) {
+			return TRUE;
+		}
+
 		$roles = array_map('strtolower', $roles);
 
 		return count(array_intersect($roles, $this->roles)) >= 1;
