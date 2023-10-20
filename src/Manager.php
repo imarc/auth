@@ -94,7 +94,7 @@ class Manager
 	 */
 	public function can($permission, $context): bool
 	{
-		if (empty($this->permissions)) {
+		if (empty($this->roles)) {
 			return TRUE;
 		}
 
